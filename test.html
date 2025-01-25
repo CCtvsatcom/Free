@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPD Video Player</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.2/shaka-player.compiled.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" controls autoplay></video>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const video = document.getElementById('video');
+            const manifestUri = "https://cnt1-streamer9.cdn.3bbtv.com:8443/3bb/live/103/103.mpd";
+            const keyId = "9c5735afb4fd402580360aed8364469c";
+            const key = "128d55d9ac2b47ad85f86b5d08320179";
+
+            // Initialize Shaka Player
+            const player = new shaka.Player(video);
+
+            // Configure Shaka Player with preferred audio language and DRM keys
+            player.configure({
+                preferredAudioLanguage: 'th', // ตั้งภาษาเสียงเป็นภาษาไทย
+                drm: {
+                    clearKeys: {
+                        [keyId]: key
+                    }
+                }
+            });
+
+            // Load and play video
+            try {
+                await player.load(manifestUri);
+                video.play();
+            } catch (err) {
+                console.error('Failed to load video', err);
+            }
+        });
+    </script>
+</body>
+</html>
